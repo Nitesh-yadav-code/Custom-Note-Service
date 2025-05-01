@@ -3,7 +3,7 @@ import supabase from "../supabaseClient";
 import { useNavigate } from "react-router-dom";
 import { useEffect, useState } from "react";
 import PostNotes from "../Components/PostNotes";
-import 
+import fetchNotes from "../Components/fetchNotes";
 
 function Dashboard() {
   const navigate = useNavigate();
