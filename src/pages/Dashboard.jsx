@@ -2,8 +2,8 @@ import React from "react";
 import supabase from "../supabaseClient";
 import { useNavigate } from "react-router-dom";
 import { useEffect, useState } from "react";
-import PostNotes from "../Components/postNotes";
-import fetchNotes from "../Components/fetchNotes";
+import PostNotes from "../Components/PostNotes";
+import 
 
 function Dashboard() {
   const navigate = useNavigate();
