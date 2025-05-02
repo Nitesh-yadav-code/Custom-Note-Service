@@ -10,7 +10,7 @@ A React-based note-taking application integrated with Supabase for authenticatio
 
 ### 2. Clone the Repository
 ```bash
-git clone https://github.com/your-repo/custom-note-service.git
+git clone https://github.com/Nitesh-yadav-code/Custom-Note-Service
 cd custom-note-service
 ```
 
