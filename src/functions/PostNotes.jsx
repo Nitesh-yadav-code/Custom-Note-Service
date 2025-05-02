@@ -1,6 +1,6 @@
 import React, { useState } from 'react';
 import '../App.css'
-const PostNotes = () => {
+const PostNotes = ({ onNoteAdded }) => {
   const uid = localStorage.getItem("uid");
   const accessToken = localStorage.getItem("accessToken");
 
@@ -15,6 +15,7 @@ const PostNotes = () => {
           'Authorization': `${accessToken}`,
           'apikey': 'eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJpc3MiOiJzdXBhYmFzZSIsInJlZiI6InB0aHdrd2J5eXhjYXptaWd4cHp2Iiwicm9sZSI6ImFub24iLCJpYXQiOjE3NDYwMTUxOTEsImV4cCI6MjA2MTU5MTE5MX0.lm80N0lOUI8DzoT5imzkyum2fxeAVMXwYX-AstukqDA',
           'Content-Type': 'application/json',
+          'Prefer': 'return=representation',
         },
         body: JSON.stringify(payload),
       });
@@ -24,6 +25,8 @@ const PostNotes = () => {
         console.error('Error:', response.status, response.statusText);
         return;
       }
+      const result = await response.json();
+      return result[0];
     } catch (error) {
       console.error('Error posting data:', error);
     }
@@ -32,9 +35,14 @@ const PostNotes = () => {
   const handleSubmit = async (e) => {
     e.preventDefault();
     const updatedData = { title, description, user_id: uid };
-    await postData(updatedData);
-    setTitle('');
-    setDescription('');
+    const newNote = await postData(updatedData);
+
+    if (newNote) {
+      onNoteAdded(newNote); 
+      setTitle('');
+      setDescription('');
+    }
+    
   };
 
   return (

@@ -2,11 +2,12 @@ import React from "react";
 import supabase from "../supabaseClient";
 import { useNavigate } from "react-router-dom";
 import { useEffect, useState } from "react";
-import PostNotes from "../Components/PostNotes";
-import fetchNotes from "../Components/fetchNotes";
+import PostNotes from "../functions/PostNotes";
+import fetchNotes from "../functions/fetchNotes";
 
 function Dashboard() {
   const navigate = useNavigate();
+  const [notes, setNotes] = useState([]);
 
   const signOut = async () => {
     const { error } = await supabase.auth.signOut();
@@ -14,8 +15,25 @@ function Dashboard() {
     navigate("/login");
   };
 
-  const data = fetchNotes();
+  useEffect(() => {
+    const loadNotes = async () => {
+      try {
+        const data = await fetchNotes();
+        setNotes(data);
+      } catch (err) {
+        console.error("Error fetching notes:", err);
+      }
+    };
+
+    loadNotes();
+  }, []);
+
   const userEmail = localStorage.getItem("email");
+
+  const handleNoteAdded = (newNote) => {
+    setNotes((prevNotes) => [newNote, ...prevNotes]); 
+  };
+
   
   return (
     <>
@@ -49,7 +67,7 @@ function Dashboard() {
               </svg>
               Create a New Note
             </h2>
-            <PostNotes />
+            <PostNotes onNoteAdded={handleNoteAdded} />
           </div>
         </div>
         <div className="w-full md:w-2/3 p-6 overflow-y-auto bg-gray-50/50">
@@ -71,8 +89,8 @@ function Dashboard() {
             Your Notes
           </h2>
           <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-2 gap-6">
-            {data.length > 0 ? (
-              data.map((item) => (
+            {notes.length > 0 ? (
+              notes.map((item) => (
                 <div
                   className="bg-white rounded-xl shadow-sm p-5 hover:shadow-md transition-all duration-300 border border-gray-100 group relative overflow-hidden"
                   key={item.id}
